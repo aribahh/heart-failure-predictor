@@ -1,10 +1,3 @@
-import subprocess
-import sys
-import os
-
-# Install packages at runtime
-subprocess.run([sys.executable, "-m", "pip", "install", "-q", "joblib", "scikit-learn", "numpy"])
-
 import streamlit as st
 import joblib
 import numpy as np
@@ -12,16 +5,16 @@ import numpy as np
 model = joblib.load('heart_model.pkl')
 scaler = joblib.load('scaler.pkl')
 
-st.set_page_config(page_title="Heart Disease Predictor", page_icon="❤️")
+st.set_page_config(page_title="Heart Failure Predictor", page_icon="❤️")
 
 # Header
-st.title("❤️ Heart Disease Predictor")
+st.title("❤️ Heart Failure Predictor")
 st.markdown("*AI-powered clinical decision support tool*")
 
 # Create two tabs
-tab1, tab2 = st.tabs(["📋 Basic Screening (7 Features)", "🏥 Clinical Assessment (11 Features)"])
+tab1, tab2 = st.tabs(["📋 Basic Screening", "🏥 Clinical Assessment"])
 
-# ========== TAB 1: Basic (7 features) ==========
+# ========== TAB 1: Basic ==========
 with tab1:
     st.markdown("### Quick Screening")
     st.info("ℹ️ For general users without ECG reports. Uses medical averages for complex features.")
@@ -39,7 +32,6 @@ with tab1:
         angina = st.radio("Chest pain during exercise?", ["No", "Yes"], key="angina1")
         blood_sugar = st.radio("High blood sugar (>120)?", ["No", "Yes"], key="bs1")
     
-    # Defaults for missing 4 features
     sex_num = 1 if sex == "Male" else 0
     angina_num = 1 if angina == "Yes" else 0
     bs_num = 1 if blood_sugar == "Yes" else 0
@@ -59,12 +51,12 @@ with tab1:
         else:
             st.success(f"✅ Low Risk ({100-prob*100:.0f}%) - Keep healthy habits")
         
-        st.caption("⚠️ Note: Based on 7 features. For more accurate results, use Clinical Assessment tab.")
+        st.caption("⚠️ Note: Based on basic questions. For more accurate results, use Clinical Assessment tab.")
 
-# ========== TAB 2: Expert (11 features) ==========
+# ========== TAB 2: Clinical ==========
 with tab2:
     st.markdown("### Complete Clinical Assessment")
-    st.info("🏥 For patients with ECG reports and medical history available.")
+    st.info("🏥 For patients with ECG reports and complete medical history available.")
     
     col1, col2 = st.columns(2)
     
@@ -95,7 +87,6 @@ with tab2:
         
         blood_sugar = st.radio("High blood sugar (>120)?", ["No", "Yes"], key="bs2")
     
-    # Convert all 11 features
     sex_num = 1 if sex == "Male" else 0
     angina_num = 1 if angina == "Yes" else 0
     bs_num = 1 if blood_sugar == "Yes" else 0
@@ -115,13 +106,13 @@ with tab2:
         prob = model.predict_proba(features_scaled)[0][1]
         
         if pred == 1:
-            st.error(f"⚠️ High Risk of Heart Disease ({prob*100:.0f}%)")
+            st.error(f"⚠️ High Risk of Heart Failure ({prob*100:.0f}%)")
             st.write("📋 Please consult a cardiologist for further evaluation.")
         else:
             st.success(f"✅ Low Risk ({100-prob*100:.0f}% healthy)")
             st.write("👍 Maintain healthy habits and regular checkups.")
         
-        st.caption(f"✅ Model accuracy: 88.59% (using all 11 features)")
+        st.caption(f"✅ Model accuracy: 88.59% (using complete clinical data)")
 
 # Footer
 st.markdown("---")
