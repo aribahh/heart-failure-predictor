@@ -1,3 +1,10 @@
+import subprocess
+import sys
+import os
+
+# Install packages at runtime
+subprocess.run([sys.executable, "-m", "pip", "install", "-q", "joblib", "scikit-learn", "numpy"])
+
 import streamlit as st
 import joblib
 import numpy as np
