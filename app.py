@@ -1,3 +1,8 @@
+import subprocess
+import sys
+
+subprocess.check_call([sys.executable, "-m", "pip", "install", "joblib", "scikit-learn", "numpy"])
+
 import streamlit as st
 import joblib
 import numpy as np
