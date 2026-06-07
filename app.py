@@ -43,8 +43,7 @@ with tab1:
         pred = model.predict(features_scaled)[0]
         prob = model.predict_proba(features_scaled)[0][1]
         
-        # CHANGE THIS - swap logic
-        if pred == 1:
+        if pred == 0:
             st.error(f"High Risk ({prob*100:.0f}%)")
         else:
             st.success(f"Low Risk ({100-prob*100:.0f}%)")
